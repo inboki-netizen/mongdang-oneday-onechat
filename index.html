@@ -114,7 +114,7 @@
   th.sortable:hover{color:var(--text);}
   th .arrow{font-size:10px; margin-left:2px; opacity:0.6;}
   /* 컬럼 폭: 순위(신규, 최소) · 업종(전체가 보이도록 확대) · 시장/현재가/시총 유지 · 종목 유지 · 남는 폭은 1~50일 6칸에 균등 배분 */
-  th:nth-child(1), td:nth-child(1){text-align:center; width:3%;}
+  th:nth-child(1), td:nth-child(1){text-align:center; width:5%;}
   th:nth-child(2), td:nth-child(2){text-align:center; width:9%;}
   th:nth-child(3), td:nth-child(3){text-align:center; width:12%;}
   th:nth-child(4){text-align:center; width:14%;}
@@ -122,10 +122,12 @@
   th:nth-child(5), td:nth-child(5){text-align:center; font-size:13px; width:12%;}
   th:nth-child(6), td:nth-child(6){text-align:center; font-size:13px; width:10%;}
   th:nth-child(7), td:nth-child(7), th:nth-child(8), td:nth-child(8), th:nth-child(9), td:nth-child(9),
-  th:nth-child(10), td:nth-child(10), th:nth-child(11), td:nth-child(11), th:nth-child(12), td:nth-child(12){text-align:center; width:6.67%;}
+  th:nth-child(10), td:nth-child(10), th:nth-child(11), td:nth-child(11), th:nth-child(12), td:nth-child(12){text-align:center; width:6.33%;}
   td{padding:10px 8px; border-bottom:1px solid var(--line); text-align:right; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
   tr:last-child td{border-bottom:none;}
   .rank-cell{color:var(--sub); font-variant-numeric:tabular-nums; font-weight:600;}
+  th.col-active, td.col-active{background:#FFF6C9;}
+  th.col-active{color:var(--text);}
   .sector-cell{color:var(--sub); font-size:12px; white-space:nowrap; overflow:visible;}
   .stock-cell{font-weight:600; cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px; white-space:normal; font-size:13px; word-break:keep-all;}
   .stock-cell:hover{color:var(--kosdaq);}
@@ -279,6 +281,30 @@ const DATA = {
     { date:"2026-09-02", name:"효성티앤씨", code:"298020", market:"KOSPI", inIndex:false, sector:"화학섬유", marketCap:153416, price:354500 },
     { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100 },
     { date:"2026-09-04", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800 },
+    { date:"2026-09-04", name:"두산에너빌리티", code:"034020", market:"KOSPI", inIndex:true, sector:"발전설비", marketCap:5073244, price:79200 },
+    { date:"2026-09-04", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:3134252, price:702000 },
+    { date:"2026-09-04", name:"SK", code:"034730", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:3951397, price:545000 },
+    { date:"2026-09-04", name:"한미반도체", code:"042700", market:"KOSPI", inIndex:true, sector:"반도체장비", marketCap:2006321, price:210500 },
+    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:1748738, price:226000 },
+    { date:"2026-09-04", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:620863, price:208500 },
+    { date:"2026-09-04", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100 },
+    { date:"2026-09-04", name:"테스", code:"095610", market:"KOSDAQ", inIndex:false, sector:"반도체장비", marketCap:259230, price:133900 },
+    { date:"2026-09-04", name:"헥토파이낸셜", code:"234340", market:"KOSDAQ", inIndex:false, sector:"전자결제(핀테크)", marketCap:31085, price:22250 },
+    { date:"2026-09-04", name:"로보티즈", code:"108490", market:"KOSDAQ", inIndex:false, sector:"로봇", marketCap:364475, price:248500 },
+    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:1748738, price:226000 },
+    { date:"2026-09-04", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800 },
+    { date:"2026-09-04", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:1788601, price:118300 },
+    { date:"2026-09-04", name:"LG에너지솔루션", code:"373220", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:8552700, price:365500 },
+    { date:"2026-09-04", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:413146, price:50200 },
+    { date:"2026-09-04", name:"DB손해보험", code:"005830", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:1329657, price:203000 },
+    { date:"2026-09-04", name:"SK케미칼", code:"285130", market:"KOSPI", inIndex:false, sector:"화학", marketCap:94970, price:54900 },
+    { date:"2026-09-04", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:1665099, price:147900 },
+    { date:"2026-09-04", name:"로보티즈", code:"108490", market:"KOSDAQ", inIndex:false, sector:"로봇", marketCap:364475, price:248500 },
+    { date:"2026-09-04", name:"SK가스", code:"018670", market:"KOSPI", inIndex:false, sector:"LPG에너지", marketCap:216900, price:234000 },
+    { date:"2026-09-04", name:"주성엔지니어링", code:"036930", market:"KOSDAQ", inIndex:false, sector:"반도체장비", marketCap:780883, price:168000 },
+    { date:"2026-09-04", name:"티씨케이", code:"064760", market:"KOSDAQ", inIndex:false, sector:"반도체소재", marketCap:268865, price:240500 },
+    { date:"2026-09-04", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:1073363, price:29150 },
+    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:1748738, price:226000 },
     { date:"2026-09-02", name:"메리츠금융지주", code:"138040", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:2290984, price:136900 },
     { date:"2026-09-03", name:"까뮤이앤씨", code:"013700", market:"KOSPI", inIndex:false, sector:"건설", marketCap:9906, price:1658 },
     { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:279233, price:129500 },
@@ -662,12 +688,15 @@ function buildBarGroup(label, count, total, color, subHtml){
   return group;
 }
 
+function isWindowField(f){ return ['w1','w3','w5','w10','w20','w50'].includes(f); }
+
 function buildTableHead(){
   const tr = document.getElementById('table-head');
   tr.innerHTML = COLUMNS.map(c => {
     if(!c.sortable) return `<th>${c.label}</th>`;
     const arrow = sortState.field === c.field ? (sortState.dir==='desc' ? '▼' : '▲') : '';
-    return `<th class="sortable" data-field="${c.field}">${c.label}<span class="arrow">${arrow}</span></th>`;
+    const activeCls = (isWindowField(c.field) && sortState.field === c.field) ? ' col-active' : '';
+    return `<th class="sortable${activeCls}" data-field="${c.field}">${c.label}<span class="arrow">${arrow}</span></th>`;
   }).join('');
   tr.querySelectorAll('th.sortable').forEach(th => {
     th.addEventListener('click', () => {
@@ -683,7 +712,6 @@ function buildTableHead(){
 function renderTable(){
   const tbody = document.getElementById('rank-table');
   tbody.innerHTML = '';
-  const isWindowField = f => ['w1','w3','w5','w10','w20','w50'].includes(f);
   const isTextField = f => ['sector','market','name'].includes(f);
   const getVal = (s,f) => {
     if(isWindowField(f)) return s.counts[f];
@@ -709,12 +737,12 @@ function renderTable(){
       <td><span class="stock-cell" onclick="openNaver('${s.code}')">${s.name}</span></td>
       <td>${fmtPrice(s.price)}</td>
       <td>${fmtCap(s.marketCap)}</td>
-      <td>${s.counts.w1}</td>
-      <td>${s.counts.w3}</td>
-      <td>${s.counts.w5}</td>
-      <td>${s.counts.w10}</td>
-      <td>${s.counts.w20}</td>
-      <td>${s.counts.w50}</td>
+      <td class="${sortState.field==='w1'?'col-active':''}">${s.counts.w1}</td>
+      <td class="${sortState.field==='w3'?'col-active':''}">${s.counts.w3}</td>
+      <td class="${sortState.field==='w5'?'col-active':''}">${s.counts.w5}</td>
+      <td class="${sortState.field==='w10'?'col-active':''}">${s.counts.w10}</td>
+      <td class="${sortState.field==='w20'?'col-active':''}">${s.counts.w20}</td>
+      <td class="${sortState.field==='w50'?'col-active':''}">${s.counts.w50}</td>
     `;
     tbody.appendChild(tr);
   });
