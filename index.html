@@ -33,11 +33,23 @@
   .title-row .name{font-weight:700; font-size:15px;}
   .title-row .meta{color:var(--sub); font-size:11px;}
 
+  .upd{color:var(--kospi); font-weight:700;}
+
+  .period-block{background:var(--panel); border-bottom:1px solid var(--line); padding-bottom:10px;}
+  .period-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:6px; padding:6px 14px 0;}
   .qr-btn{
-    flex-shrink:0; background:var(--panel-2); border:1px solid var(--line); color:var(--sub);
-    padding:5px 10px; border-radius:14px; font-size:12px; font-weight:600;
+    background:var(--panel-2); border:1px solid var(--line); color:var(--sub);
+    padding:8px 4px; border-radius:8px; font-size:13px; font-weight:600; text-align:center;
   }
   .qr-btn.active{background:var(--kospi); color:#fff; border-color:var(--kospi);}
+
+  .basis-tag{font-size:11px; font-weight:700; padding:1px 6px; border-radius:8px; margin-left:6px; background:rgba(26,115,232,0.12); color:var(--kosdaq);}
+
+  /* 시장분포·시총분포는 5~7개, 추천순위는 10개 정도 보이는 높이로 스크롤 */
+  .scroll-list{max-height:250px; overflow-y:auto;}
+  .scroll-list-rank{max-height:532px; overflow-y:auto;}
+  .scroll-list::-webkit-scrollbar, .scroll-list-rank::-webkit-scrollbar{width:5px;}
+  .scroll-list::-webkit-scrollbar-thumb, .scroll-list-rank::-webkit-scrollbar-thumb{background:var(--line); border-radius:3px;}
 
   .tag{display:inline-block; font-size:10px; font-weight:700; padding:2px 6px; border-radius:10px; flex-shrink:0;}
   .tag.kospi{background:rgba(217,48,37,0.1); color:var(--kospi);}
@@ -67,6 +79,11 @@
   .dist-line{display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--line); font-size:13px;}
   .dist-line:last-child{border-bottom:none;}
   .dist-line .cnt{font-weight:700; font-variant-numeric:tabular-nums;}
+  .dist-line.clickable{cursor:pointer;}
+  .dist-sublist{display:none; padding:2px 0 6px 12px; border-bottom:1px solid var(--line);}
+  .dist-sublist.show{display:block;}
+  .sub-row{display:flex; justify-content:space-between; align-items:center; padding:5px 0; font-size:12.5px; color:var(--sub); cursor:pointer;}
+  .sub-row .cnt{color:var(--text); font-weight:600; font-variant-numeric:tabular-nums;}
 
   .dist-item{flex-shrink:0; font-size:12px; padding:4px 8px; background:var(--panel-2); border-radius:8px;}
   .dist-item b{font-variant-numeric:tabular-nums;}
@@ -96,15 +113,19 @@
 </div>
 
 <div id="app">
-  <!-- 1줄: 제목 + 기준일 + 업데이트시간 -->
+  <!-- 1줄: 제목 -->
   <div class="row title-row">
     <span class="name">줌과외 1기 종목추천</span>
-    <span class="meta">· 기준 09시~익일09시 · 업데이트 <span id="m-updated"></span></span>
+  </div>
+  <!-- 1줄: 업데이트(먼저, 강조색) + 기준(참고) -->
+  <div class="row title-row">
+    <span class="meta"><span class="upd">업데이트 <span id="m-updated"></span></span> · * 영업일 기준 : 전일 09시~09시</span>
   </div>
 
-  <!-- 1줄: 기간 -->
-  <div class="row" id="m-period">
-    <span class="label">기간</span>
+  <!-- 기간: 6개 버튼을 위 3개 / 아래 3개로 배치 -->
+  <div class="period-block">
+    <div class="label" style="padding:6px 14px 0;">기간</div>
+    <div class="period-grid" id="m-period"></div>
   </div>
 
   <!-- 1줄: 총 추천건수 -->
@@ -114,26 +135,26 @@
 
   <!-- 최다 추천: 종목 1개당 1줄 -->
   <div class="section">
-    <div class="header">최다 추천</div>
+    <div class="header">최다 추천 <span id="m-top-basis"></span></div>
     <div id="m-top"></div>
   </div>
 
   <!-- 시장분포: 항목별 아래로 배열 -->
   <div class="section">
-    <div class="header">시장분포</div>
-    <div id="m-market"></div>
+    <div class="header">시장분포 <span id="m-market-basis"></span></div>
+    <div id="m-market" class="scroll-list"></div>
   </div>
 
   <!-- 시가총액 분포: 항목별 아래로 배열 -->
   <div class="section">
-    <div class="header">시총분포</div>
-    <div id="m-cap"></div>
+    <div class="header">시총분포 <span id="m-cap-basis"></span></div>
+    <div id="m-cap" class="scroll-list"></div>
   </div>
 
   <!-- 추천순위: 종목 1개당 1줄(박스), 시총·PER·PBR 포함 -->
   <div class="section">
     <div class="header">추천순위 <span id="m-rank-basis"></span></div>
-    <div id="m-rank"></div>
+    <div id="m-rank" class="scroll-list-rank"></div>
   </div>
 
   <a class="top-link" href="index.html">PC용 전체 대시보드 보기 →</a>
@@ -443,9 +464,13 @@ function render(){
   // 최다 추천: 동률이면 종목마다 한 줄씩
   const topCount = ranked.length ? ranked[0].count : 0;
   const topStocks = ranked.filter(s=>s.count===topCount);
+  document.getElementById('m-top-basis').innerHTML = `<span class="basis-tag">${curRangeLabel} 기준</span>`;
   const topBox = document.getElementById('m-top');
   topBox.innerHTML = topStocks.length
-    ? topStocks.map(s => `<div class="top-item"><span>${s.name}</span><span class="cnt">${s.count}회</span></div>`).join('')
+    ? topStocks.map(s => {
+        const pct = picks.length ? Math.round(s.count/picks.length*100) : 0;
+        return `<div class="top-item"><span>${s.name}</span><span class="cnt">${s.count}회 · ${pct}%</span></div>`;
+      }).join('')
     : '<div class="top-item">-</div>';
 
   // 시장분포: 항목별로 아래로 배열
@@ -455,11 +480,27 @@ function render(){
     { label:'KOSDAQ150',cls:'kosdaq150',filter:s=>s.market==='KOSDAQ'&&s.inIndex },
     { label:'KOSDAQ',   cls:'kosdaq',   filter:s=>s.market==='KOSDAQ'&&!s.inIndex },
   ];
+  document.getElementById('m-market-basis').innerHTML = `<span class="basis-tag">${curRangeLabel} 기준</span>`;
   const marketBox = document.getElementById('m-market');
-  marketBox.innerHTML = groupDefs.map(g => {
-    const cnt = ranked.filter(g.filter).reduce((s,x)=>s+x.count,0);
-    return `<div class="dist-line"><span class="tag ${g.cls}">${g.label}</span><span class="cnt">${cnt}건</span></div>`;
-  }).join('');
+  marketBox.innerHTML = '';
+  const marketCountsArr = groupDefs.map(g => ranked.filter(g.filter).reduce((s,x)=>s+x.count,0));
+  const maxMarketCnt = Math.max(...marketCountsArr, 1); // 시총분포와 동일하게 최대값 기준 비율(%)
+  groupDefs.forEach((g, gi) => {
+    const stocks = ranked.filter(g.filter);
+    const cnt = marketCountsArr[gi];
+    const pct = Math.round(cnt/maxMarketCnt*100);
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<div class="dist-line clickable"><span class="tag ${g.cls}">${g.label}</span><span class="cnt">${cnt}건 · ${pct}%</span></div>`;
+    const line = wrap.firstElementChild;
+    const sub = document.createElement('div');
+    sub.className = 'dist-sublist';
+    sub.innerHTML = stocks.length
+      ? stocks.map((s,i)=>`<div class="sub-row" onclick="openNaver('${s.code}')"><span>${i+1}. ${s.name}</span><span class="cnt">${s.count}회</span></div>`).join('')
+      : '<div class="sub-row">해당 종목 없음</div>';
+    line.addEventListener('click', () => sub.classList.toggle('show'));
+    marketBox.appendChild(line);
+    marketBox.appendChild(sub);
+  });
 
   // 시가총액 분포: 항목별로 아래로 배열
   const capTiers = [
@@ -468,17 +509,33 @@ function render(){
     { label:'1조~5000억', min:5000 },
     { label:'5000억 미만', min:-Infinity },
   ];
+  document.getElementById('m-cap-basis').innerHTML = `<span class="basis-tag">${curRangeLabel} 기준</span>`;
   const capBox = document.getElementById('m-cap');
-  capBox.innerHTML = capTiers.map(t => {
-    const cnt = ranked.filter(s => {
-      const tier = capTiers.find(tt => s.marketCap >= tt.min);
-      return tier.label === t.label;
-    }).length;
-    return `<div class="dist-line"><span>${t.label}</span><span class="cnt">${cnt}개</span></div>`;
-  }).join('');
+  const capGroups = capTiers.map(t => ranked.filter(s => {
+    const tier = capTiers.find(tt => s.marketCap >= tt.min);
+    return tier.label === t.label;
+  }));
+  const maxCapCnt = Math.max(...capGroups.map(g=>g.length), 1); // 데스크탑처럼 최대값을 100% 기준으로
+  capBox.innerHTML = '';
+  capTiers.forEach((t, i) => {
+    const stocks = capGroups[i];
+    const cnt = stocks.length;
+    const pct = Math.round(cnt/maxCapCnt*100);
+    const wrap = document.createElement('div');
+    wrap.innerHTML = `<div class="dist-line clickable"><span>${t.label}</span><span class="cnt">${cnt}개 · ${pct}%</span></div>`;
+    const line = wrap.firstElementChild;
+    const sub = document.createElement('div');
+    sub.className = 'dist-sublist';
+    sub.innerHTML = stocks.length
+      ? stocks.map(s=>`<div class="sub-row" onclick="openNaver('${s.code}')"><span class="tag ${marketTagClass(s)}" style="margin-right:6px;">${marketLabel(s)}</span>${s.name}<span class="cnt">${fmtCap(s.marketCap)}</span></div>`).join('')
+      : '<div class="sub-row">해당 종목 없음</div>';
+    line.addEventListener('click', () => sub.classList.toggle('show'));
+    capBox.appendChild(line);
+    capBox.appendChild(sub);
+  });
 
   // 추천순위: 종목 1개당 1줄(박스) + 시총·PER·PBR
-  document.getElementById('m-rank-basis').textContent = '(' + curRangeLabel + ' 기준)';
+  document.getElementById('m-rank-basis').innerHTML = `<span class="basis-tag">${curRangeLabel} 기준</span>`;
   const rankBox = document.getElementById('m-rank');
   rankBox.innerHTML = ranked.map((s,i) => `
     <div class="rank-card">
