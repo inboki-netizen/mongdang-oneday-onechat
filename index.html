@@ -23,7 +23,7 @@
 
   #app{display:none;}
   .row{
-    background:var(--panel); border-bottom:1px solid var(--line); padding:10px 14px;
+    background:var(--panel); border-bottom:1px solid var(--line); padding:7px 14px;
     display:flex; align-items:center; gap:8px; white-space:nowrap; overflow-x:auto;
   }
   .row::-webkit-scrollbar{display:none;}
@@ -68,35 +68,38 @@
 
   .dist-item{flex-shrink:0; font-size:12px; padding:4px 8px; background:var(--panel-2); border-radius:8px;}
   .dist-item b{font-variant-numeric:tabular-nums;}
-  .section{background:var(--panel); border-bottom:1px solid var(--line); padding:10px 14px;}
-  .section .header{color:var(--sub); font-size:12px; margin-bottom:8px;}
+  .section{background:var(--panel); border-bottom:1px solid var(--line); padding:8px 14px;}
+  .section .header{color:var(--sub); font-size:12px; margin-bottom:5px;}
   .section .header #m-rank-basis{color:var(--sub); font-weight:400;}
 
-  .top-item{display:flex; justify-content:space-between; align-items:center; padding:5px 0; font-size:14px; border-bottom:1px solid var(--line);}
+  .top-item{display:flex; justify-content:space-between; align-items:center; padding:3px 0; font-size:14px; border-bottom:1px solid var(--line);}
   .top-item:last-child{border-bottom:none;}
   .top-item .cnt{color:var(--kospi); font-weight:700;}
 
-  .dist-line{display:flex; justify-content:space-between; align-items:center; padding:6px 0; border-bottom:1px solid var(--line); font-size:13px;}
+  .dist-line{display:flex; justify-content:space-between; align-items:center; padding:4px 0; border-bottom:1px solid var(--line); font-size:13px;}
   .dist-line:last-child{border-bottom:none;}
   .dist-line .cnt{font-weight:700; font-variant-numeric:tabular-nums;}
   .dist-line.clickable{cursor:pointer;}
   .dist-sublist{display:none; padding:2px 0 6px 12px; border-bottom:1px solid var(--line);}
   .dist-sublist.show{display:block;}
-  .sub-row{display:flex; justify-content:space-between; align-items:center; padding:5px 0; font-size:12.5px; color:var(--sub); cursor:pointer;}
-  .sub-row .cnt{color:var(--text); font-weight:600; font-variant-numeric:tabular-nums;}
+  .sub-row{display:flex; justify-content:space-between; align-items:center; padding:5px 0; font-size:12.5px; color:var(--sub); cursor:pointer; gap:6px;}
+  .sub-row .cnt{color:var(--text); font-weight:600; font-variant-numeric:tabular-nums; text-align:center; min-width:56px; flex-shrink:0;}
+  .sub-row > span:first-child:not(.tag){text-align:left; flex:1;}
+  .sub-row .name-flex{text-align:left; flex:1;}
 
   .dist-item{flex-shrink:0; font-size:12px; padding:4px 8px; background:var(--panel-2); border-radius:8px;}
   .dist-item b{font-variant-numeric:tabular-nums;}
 
   .rank-card{
-    border-bottom:1px solid var(--line); padding:9px 0; display:flex; flex-direction:column; gap:4px;
+    border-bottom:1px solid var(--line); padding:5px 0; display:flex; flex-direction:column; gap:1px;
   }
   .rank-card:last-child{border-bottom:none;}
   .rank-card .top-line{display:flex; align-items:center; gap:6px;}
   .rank-card .rk{color:var(--sub); font-size:12px; width:26px; flex-shrink:0;}
   .rank-card .nm{font-weight:700; font-size:14px; flex:1; cursor:pointer;}
+  .rank-card .seg{color:var(--sub); font-size:10px; font-weight:400;}
   .rank-card .cnt{color:var(--kospi); font-weight:700; font-size:13px; flex-shrink:0;}
-  .rank-card .sub-line{display:flex; gap:10px; padding-left:32px; font-size:11.5px; color:var(--sub);}
+  .rank-card .sub-line{display:flex; gap:8px; padding-left:32px; font-size:11px; color:var(--sub); flex-wrap:wrap;}
   .rank-card .sub-line b{color:var(--text); font-variant-numeric:tabular-nums;}
 
   a.top-link{display:block; text-align:center; padding:10px; font-size:12px; color:var(--sub); background:var(--panel);}
@@ -154,6 +157,7 @@
   <!-- 추천순위: 종목 1개당 1줄(박스), 시총·PER·PBR 포함 -->
   <div class="section">
     <div class="header">추천순위 <span id="m-rank-basis"></span></div>
+    <div style="color:var(--sub); font-size:10.5px; margin:-3px 0 6px;">PER·PBR·배당수익률 기준일 : 26년 9월 4일 (KRX 자료)</div>
     <div id="m-rank" class="scroll-list-rank"></div>
   </div>
 
@@ -163,207 +167,211 @@
 <script>
 const DATA = {
   picks: [
-    { date:"2026-09-02", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:1788601, price:118300, per:20.36, pbr:0.52 },
-    { date:"2026-09-03", name:"삼아알미늄", code:"006110", market:"KOSPI", inIndex:false, sector:"비철금속", marketCap:104654, price:69200, per:null, pbr:2.82 },
-    { date:"2026-09-04", name:"이오테크닉스", code:"039030", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:514957, price:418000, per:101.51, pbr:8.52 },
-    { date:"2026-09-02", name:"우리금융지주", code:"316140", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:2552965, price:34650, per:7.16, pbr:0.59 },
-    { date:"2026-09-03", name:"DB손해보험", code:"005830", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:1329657, price:203000, per:4.52, pbr:0.75 },
-    { date:"2026-09-04", name:"한진칼", code:"180640", market:"KOSPI", inIndex:true, sector:"지주회사(항공)", marketCap:893279, price:133800, per:51.02, pbr:2.38 },
-    { date:"2026-09-02", name:"아모레퍼시픽", code:"090430", market:"KOSPI", inIndex:true, sector:"화장품", marketCap:833521, price:142500, per:30.94, pbr:1.34 },
-    { date:"2026-09-03", name:"태웅", code:"044490", market:"KOSDAQ", inIndex:false, sector:"단조(풍력/조선기자재)", marketCap:69025, price:34500, per:110.52, pbr:0.98 },
-    { date:"2026-09-04", name:"피노", code:"033790", market:"KOSDAQ", inIndex:false, sector:"2차전지소재", marketCap:73573, price:8830, per:null, pbr:4.98 },
-    { date:"2026-09-02", name:"더블유시피(WCP)", code:"393890", market:"KOSDAQ", inIndex:false, sector:"2차전지분리막", marketCap:34181, price:10100, per:null, pbr:0.4 },
-    { date:"2026-09-03", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:279233, price:129500, per:37.63, pbr:6.81 },
-    { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:279233, price:129500, per:37.63, pbr:6.81 },
-    { date:"2026-09-02", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800, per:null, pbr:0.74 },
-    { date:"2026-09-03", name:"산일전기", code:"062040", market:"KOSPI", inIndex:true, sector:"전력기기(변압기)", marketCap:571489, price:186500, per:48.66, pbr:12.38 },
-    { date:"2026-09-04", name:"인바디", code:"041830", market:"KOSDAQ", inIndex:false, sector:"의료기기", marketCap:80346, price:59600, per:23.85, pbr:2.43 },
-    { date:"2026-09-02", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:5375205, price:114500, per:9.76, pbr:0.79 },
-    { date:"2026-09-03", name:"비에이치", code:"090460", market:"KOSPI", inIndex:false, sector:"전자부품(FPCB)", marketCap:66512, price:19730, per:21.44, pbr:0.92 },
-    { date:"2026-09-04", name:"한미반도체", code:"042700", market:"KOSPI", inIndex:true, sector:"반도체장비", marketCap:2006321, price:210500, per:113.7, pbr:35.24 },
-    { date:"2026-09-02", name:"세방전지", code:"004490", market:"KOSPI", inIndex:false, sector:"2차전지(납축전지)", marketCap:92169, price:66500, per:4.85, pbr:0.42 },
-    { date:"2026-09-03", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:4343560, price:539000, per:null, pbr:1.79 },
-    { date:"2026-09-04", name:"한미사이언스", code:"008930", market:"KOSPI", inIndex:true, sector:"지주회사(제약)", marketCap:352216, price:51500, per:17.25, pbr:2.12 },
-    { date:"2026-09-02", name:"JB금융지주", code:"175330", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:589408, price:31600, per:6.85, pbr:0.78 },
-    { date:"2026-09-03", name:"삼천리", code:"004690", market:"KOSPI", inIndex:false, sector:"도시가스", marketCap:49505, price:136500, per:3.5, pbr:0.23 },
-    { date:"2026-09-04", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:620863, price:208500, per:135.21, pbr:14.37 },
-    { date:"2026-09-02", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:73631, price:11180, per:null, pbr:2.13 },
-    { date:"2026-09-03", name:"LG화학", code:"051910", market:"KOSPI", inIndex:true, sector:"화학", marketCap:2026000, price:287000, per:null, pbr:0.67 },
-    { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:279233, price:129500, per:37.63, pbr:6.81 },
-    { date:"2026-09-02", name:"DB손해보험", code:"005830", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:1329657, price:203000, per:4.52, pbr:0.75 },
-    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100, per:10.03, pbr:0.46 },
-    { date:"2026-09-04", name:"동원산업", code:"006040", market:"KOSPI", inIndex:true, sector:"수산·식품", marketCap:167072, price:37850, per:3.66, pbr:0.4 },
-    { date:"2026-09-02", name:"롯데웰푸드", code:"280360", market:"KOSPI", inIndex:true, sector:"식품", marketCap:134939, price:146600, per:11.66, pbr:0.38 },
-    { date:"2026-09-03", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:6309894, price:177900, per:10.32, pbr:0.97 },
-    { date:"2026-09-04", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:620863, price:208500, per:135.21, pbr:14.37 },
-    { date:"2026-09-02", name:"메리츠금융지주", code:"138040", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:2290984, price:136900, per:8.18, pbr:1.72 },
-    { date:"2026-09-03", name:"효성티앤씨", code:"298020", market:"KOSPI", inIndex:true, sector:"화학섬유", marketCap:153416, price:354500, per:108.07, pbr:0.75 },
-    { date:"2026-09-04", name:"로보티즈", code:"108490", market:"KOSDAQ", inIndex:true, sector:"로봇", marketCap:364475, price:248500, per:675.32, pbr:11.98 },
-    { date:"2026-09-02", name:"현대해상", code:"001450", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:456078, price:53500, per:2.68, pbr:0.53 },
-    { date:"2026-09-03", name:"한국가스공사", code:"036460", market:"KOSPI", inIndex:true, sector:"에너지공기업", marketCap:348020, price:37700, per:21.84, pbr:0.26 },
-    { date:"2026-09-04", name:"LG전자", code:"066570", market:"KOSPI", inIndex:true, sector:"전자", marketCap:3252806, price:199700, per:38.09, pbr:1.53 },
-    { date:"2026-09-02", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:6309894, price:177900, per:10.32, pbr:0.97 },
-    { date:"2026-09-03", name:"동원산업", code:"006040", market:"KOSPI", inIndex:true, sector:"수산·식품", marketCap:167072, price:37850, per:3.66, pbr:0.4 },
-    { date:"2026-09-04", name:"ISC", code:"095340", market:"KOSDAQ", inIndex:true, sector:"반도체부품(소켓)", marketCap:363953, price:171700, per:66.17, pbr:6.92 },
-    { date:"2026-09-02", name:"효성티앤씨", code:"298020", market:"KOSPI", inIndex:true, sector:"화학섬유", marketCap:153416, price:354500, per:108.07, pbr:0.75 },
-    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100, per:10.03, pbr:0.46 },
-    { date:"2026-09-04", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800, per:null, pbr:0.74 },
-    { date:"2026-09-04", name:"두산에너빌리티", code:"034020", market:"KOSPI", inIndex:true, sector:"발전설비", marketCap:5073244, price:79200, per:657.58, pbr:7.14 },
-    { date:"2026-09-04", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:3134252, price:702000, per:13.02, pbr:1.24 },
-    { date:"2026-09-04", name:"SK", code:"034730", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:3951397, price:545000, per:28.76, pbr:1.82 },
-    { date:"2026-09-04", name:"한미반도체", code:"042700", market:"KOSPI", inIndex:true, sector:"반도체장비", marketCap:2006321, price:210500, per:113.7, pbr:35.24 },
-    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:1748738, price:226000, per:19.43, pbr:1.49 },
-    { date:"2026-09-04", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:620863, price:208500, per:135.21, pbr:14.37 },
-    { date:"2026-09-04", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100, per:10.03, pbr:0.46 },
-    { date:"2026-09-04", name:"테스", code:"095610", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:259230, price:133900, per:64.12, pbr:9.42 },
-    { date:"2026-09-04", name:"헥토파이낸셜", code:"234340", market:"KOSDAQ", inIndex:false, sector:"전자결제(핀테크)", marketCap:31085, price:22250, per:27.69, pbr:1.54 },
-    { date:"2026-09-04", name:"로보티즈", code:"108490", market:"KOSDAQ", inIndex:true, sector:"로봇", marketCap:364475, price:248500, per:675.32, pbr:11.98 },
-    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:1748738, price:226000, per:19.43, pbr:1.49 },
-    { date:"2026-09-04", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800, per:null, pbr:0.74 },
-    { date:"2026-09-04", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:1788601, price:118300, per:20.36, pbr:0.52 },
-    { date:"2026-09-04", name:"LG에너지솔루션", code:"373220", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:8552700, price:365500, per:null, pbr:4.19 },
-    { date:"2026-09-04", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:413146, price:50200, per:59.93, pbr:14.17 },
-    { date:"2026-09-04", name:"DB손해보험", code:"005830", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:1329657, price:203000, per:4.52, pbr:0.75 },
-    { date:"2026-09-04", name:"SK케미칼", code:"285130", market:"KOSPI", inIndex:true, sector:"화학", marketCap:94970, price:54900, per:17.11, pbr:0.34 },
-    { date:"2026-09-04", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:1665099, price:147900, per:70.05, pbr:1.39 },
-    { date:"2026-09-04", name:"주성엔지니어링", code:"036930", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:780883, price:168000, per:257.36, pbr:15.55 },
-    { date:"2026-09-04", name:"삼화콘덴서", code:"001820", market:"KOSPI", inIndex:false, sector:"전자부품(콘덴서)", marketCap:109147, price:105000, per:123.67, pbr:5.66 },
-    { date:"2026-09-04", name:"LX하우시스", code:"108670", market:"KOSPI", inIndex:false, sector:"건축자재", marketCap:31386, price:35000, per:null, pbr:0.38 },
-    { date:"2026-09-04", name:"HD현대", code:"267250", market:"KOSPI", inIndex:true, sector:"조선·중공업지주", marketCap:168650, price:213500, per:14.64, pbr:1.39 },
-    { date:"2026-09-04", name:"한진칼", code:"180640", market:"KOSPI", inIndex:true, sector:"지주회사(항공)", marketCap:893279, price:133800, per:51.02, pbr:2.38 },
-    { date:"2026-09-04", name:"티씨케이", code:"064760", market:"KOSDAQ", inIndex:true, sector:"반도체소재", marketCap:268865, price:240500, per:44.4, pbr:5.87 },
-    { date:"2026-09-04", name:"제이에스링크", code:"127120", market:"KOSDAQ", inIndex:false, sector:"바이오·유전체분석", marketCap:10954, price:29900, per:null, pbr:17.44 },
-    { date:"2026-09-04", name:"팬오션", code:"028670", market:"KOSPI", inIndex:true, sector:"해운", marketCap:317534, price:5940, per:8.4, pbr:0.44 },
-    { date:"2026-09-04", name:"HD현대", code:"267250", market:"KOSPI", inIndex:true, sector:"조선·중공업지주", marketCap:168650, price:213500, per:14.64, pbr:1.39 },
-    { date:"2026-09-04", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:1665099, price:147900, per:70.05, pbr:1.39 },
-    { date:"2026-09-04", name:"로보티즈", code:"108490", market:"KOSDAQ", inIndex:true, sector:"로봇", marketCap:364475, price:248500, per:675.32, pbr:11.98 },
-    { date:"2026-09-04", name:"SK가스", code:"018670", market:"KOSPI", inIndex:false, sector:"LPG에너지", marketCap:216900, price:234000, per:7.98, pbr:0.64 },
-    { date:"2026-09-04", name:"주성엔지니어링", code:"036930", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:780883, price:168000, per:257.36, pbr:15.55 },
-    { date:"2026-09-04", name:"티씨케이", code:"064760", market:"KOSDAQ", inIndex:true, sector:"반도체소재", marketCap:268865, price:240500, per:44.4, pbr:5.87 },
-    { date:"2026-09-04", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:1073363, price:29150, per:12.92, pbr:0.93 },
-    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:1748738, price:226000, per:19.43, pbr:1.49 },
-    { date:"2026-09-02", name:"메리츠금융지주", code:"138040", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:2290984, price:136900, per:8.18, pbr:1.72 },
-    { date:"2026-09-03", name:"까뮤이앤씨", code:"013700", market:"KOSPI", inIndex:false, sector:"건설", marketCap:9906, price:1658, per:3.76, pbr:0.67 },
-    { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:279233, price:129500, per:37.63, pbr:6.81 },
-    { date:"2026-09-02", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:1073363, price:29150, per:12.92, pbr:0.93 },
-    { date:"2026-09-03", name:"엘앤에프", code:"066970", market:"KOSPI", inIndex:true, sector:"2차전지소재", marketCap:491877, price:120900, per:null, pbr:6.38 },
-    { date:"2026-09-04", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:73631, price:11180, per:null, pbr:2.13 },
-    { date:"2026-09-02", name:"오뚜기", code:"007310", market:"KOSPI", inIndex:true, sector:"식품", marketCap:134663, price:336000, per:14.94, pbr:0.5 },
-    { date:"2026-09-03", name:"코스맥스", code:"192820", market:"KOSPI", inIndex:true, sector:"화장품ODM", marketCap:320056, price:282000, per:14.28, pbr:3.15 },
-    { date:"2026-09-04", name:"비에이치", code:"090460", market:"KOSPI", inIndex:false, sector:"전자부품(FPCB)", marketCap:66512, price:19730, per:21.44, pbr:0.92 },
-    { date:"2026-09-02", name:"BGF리테일", code:"282330", market:"KOSPI", inIndex:true, sector:"편의점유통", marketCap:260295, price:150600, per:10.25, pbr:1.52 },
-    { date:"2026-09-03", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:1788601, price:118300, per:20.36, pbr:0.52 },
-    { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:279233, price:129500, per:37.63, pbr:6.81 },
-    { date:"2026-09-02", name:"디아이", code:"003160", market:"KOSPI", inIndex:false, sector:"반도체장비", marketCap:86173, price:30450, per:131.12, pbr:4.09 },
-    { date:"2026-09-03", name:"코스맥스", code:"192820", market:"KOSPI", inIndex:true, sector:"화장품ODM", marketCap:320056, price:282000, per:14.28, pbr:3.15 },
-    { date:"2026-09-04", name:"LX하우시스", code:"108670", market:"KOSPI", inIndex:false, sector:"건축자재", marketCap:31386, price:35000, per:null, pbr:0.38 },
-    { date:"2026-09-02", name:"한화생명", code:"088350", market:"KOSPI", inIndex:true, sector:"생명보험", marketCap:530671, price:6110, per:6.55, pbr:0.25 },
-    { date:"2026-09-03", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:6309894, price:177900, per:10.32, pbr:0.97 },
-    { date:"2026-09-04", name:"한솔테크닉스", code:"004710", market:"KOSPI", inIndex:false, sector:"전자부품", marketCap:45098, price:8490, per:null, pbr:1.24 },
-    { date:"2026-09-02", name:"HT로보틱스(구 세아메카닉스)", code:"396300", market:"KOSDAQ", inIndex:false, sector:"자동차/로봇부품(다이캐스팅)", marketCap:14966, price:5650, per:64.72, pbr:1.25 },
-    { date:"2026-09-03", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:4343560, price:539000, per:null, pbr:1.79 },
-    { date:"2026-09-04", name:"포스코홀딩스", code:"005490", market:"KOSPI", inIndex:true, sector:"철강", marketCap:2710060, price:342000, per:36.45, pbr:0.43 },
-    { date:"2026-09-02", name:"아스플로", code:"159010", market:"KOSDAQ", inIndex:false, sector:"반도체소재(초고순도배관)", marketCap:33270, price:24950, per:null, pbr:6.19 },
-    { date:"2026-09-03", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:1073363, price:29150, per:12.92, pbr:0.93 },
-    { date:"2026-09-04", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:1788601, price:118300, per:20.36, pbr:0.52 },
-    { date:"2026-09-02", name:"디아이", code:"003160", market:"KOSPI", inIndex:false, sector:"반도체장비", marketCap:86173, price:30450, per:131.12, pbr:4.09 },
-    { date:"2026-09-03", name:"LG생활건강", code:"051900", market:"KOSPI", inIndex:true, sector:"화장품/생활용품", marketCap:436536, price:291500, per:null, pbr:0.71 },
-    { date:"2026-09-04", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:5375205, price:114500, per:9.76, pbr:0.79 },
-    { date:"2026-09-02", name:"삼화콘덴서", code:"001820", market:"KOSPI", inIndex:false, sector:"전자부품(콘덴서)", marketCap:109147, price:105000, per:123.67, pbr:5.66 },
-    { date:"2026-09-03", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:1073363, price:29150, per:12.92, pbr:0.93 },
-    { date:"2026-09-04", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:73631, price:11180, per:null, pbr:2.13 },
-    { date:"2026-09-02", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:413146, price:50200, per:59.93, pbr:14.17 },
-    { date:"2026-09-03", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:1788601, price:118300, per:20.36, pbr:0.52 },
-    { date:"2026-09-04", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:1073363, price:29150, per:12.92, pbr:0.93 },
-    { date:"2026-09-02", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:6309894, price:177900, per:10.32, pbr:0.97 },
-    { date:"2026-09-03", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:5375205, price:114500, per:9.76, pbr:0.79 },
-    { date:"2026-09-04", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800, per:null, pbr:0.74 },
-    { date:"2026-09-02", name:"유진테크", code:"084370", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:299741, price:130800, per:97.43, pbr:9.14 },
-    { date:"2026-09-03", name:"도우인시스", code:"484120", market:"KOSDAQ", inIndex:false, sector:"디스플레이장비및부품", marketCap:22955, price:20950, per:311.84, pbr:0.99 },
-    { date:"2026-09-04", name:"현대엘리베이터", code:"017800", market:"KOSPI", inIndex:true, sector:"승강기", marketCap:292020, price:74700, per:9.8, pbr:1.9 },
-    { date:"2026-09-02", name:"아스플로", code:"159010", market:"KOSDAQ", inIndex:false, sector:"반도체소재(초고순도배관)", marketCap:33270, price:24950, per:null, pbr:6.19 },
-    { date:"2026-09-03", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:279233, price:129500, per:37.63, pbr:6.81 },
-    { date:"2026-09-04", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:6309894, price:177900, per:10.32, pbr:0.97 },
-    { date:"2026-09-02", name:"iM금융지주", code:"139130", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:301682, price:19050, per:6.69, pbr:0.43 },
-    { date:"2026-09-03", name:"우리금융지주", code:"316140", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:2552965, price:34650, per:7.16, pbr:0.59 },
-    { date:"2026-09-04", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:1665099, price:147900, per:70.05, pbr:1.39 },
-    { date:"2026-09-02", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:4343560, price:539000, per:null, pbr:1.79 },
-    { date:"2026-09-03", name:"녹십자웰빙", code:"234690", market:"KOSDAQ", inIndex:false, sector:"건강기능식품", marketCap:16167, price:8970, per:14.1, pbr:1.25 },
-    { date:"2026-09-04", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:73631, price:11180, per:null, pbr:2.13 },
-    { date:"2026-09-02", name:"롯데웰푸드", code:"280360", market:"KOSPI", inIndex:true, sector:"식품", marketCap:134939, price:146600, per:11.66, pbr:0.38 },
-    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100, per:10.03, pbr:0.46 },
-    { date:"2026-09-04", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:5375205, price:114500, per:9.76, pbr:0.79 },
-    { date:"2026-09-02", name:"산일전기", code:"062040", market:"KOSPI", inIndex:true, sector:"전력기기(변압기)", marketCap:571489, price:186500, per:48.66, pbr:12.38 },
-    { date:"2026-09-03", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:620863, price:208500, per:135.21, pbr:14.37 },
-    { date:"2026-09-04", name:"테스", code:"095610", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:259230, price:133900, per:64.12, pbr:9.42 },
-    { date:"2026-09-02", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800, per:null, pbr:0.74 },
-    { date:"2026-09-03", name:"LG에너지솔루션", code:"373220", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:8552700, price:365500, per:null, pbr:4.19 },
-    { date:"2026-09-04", name:"이수페타시스", code:"007660", market:"KOSPI", inIndex:true, sector:"PCB(인쇄회로기판)", marketCap:778137, price:106000, per:50.66, pbr:11.21 },
-    { date:"2026-09-02", name:"빙그레", code:"005180", market:"KOSPI", inIndex:false, sector:"식품", marketCap:85275, price:92000, per:10.2, pbr:0.76 },
-    { date:"2026-09-03", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:5375205, price:114500, per:9.76, pbr:0.79 },
-    { date:"2026-09-02", name:"JB금융지주", code:"175330", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:589408, price:31600, per:6.85, pbr:0.78 },
-    { date:"2026-09-03", name:"아시아나항공", code:"020560", market:"KOSPI", inIndex:false, sector:"항공", marketCap:160260, price:7780, per:null, pbr:2.03 },
-    { date:"2026-09-02", name:"솔트웨어", code:"328380", market:"KOSDAQ", inIndex:false, sector:"IT서비스", marketCap:2693, price:3930, per:20.84, pbr:0.76 },
-    { date:"2026-09-03", name:"한화생명", code:"088350", market:"KOSPI", inIndex:true, sector:"생명보험", marketCap:530671, price:6110, per:6.55, pbr:0.25 },
-    { date:"2026-09-02", name:"이수페타시스", code:"007660", market:"KOSPI", inIndex:true, sector:"PCB(인쇄회로기판)", marketCap:778137, price:106000, per:50.66, pbr:11.21 },
-    { date:"2026-09-03", name:"동국제약", code:"086450", market:"KOSDAQ", inIndex:false, sector:"제약", marketCap:8468, price:36700, per:12.89, pbr:1.3 },
-    { date:"2026-09-02", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:413146, price:50200, per:59.93, pbr:14.17 },
-    { date:"2026-09-03", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:1665099, price:147900, per:70.05, pbr:1.39 },
-    { date:"2026-09-02", name:"심텍", code:"222800", market:"KOSDAQ", inIndex:true, sector:"PCB(반도체기판)", marketCap:446197, price:117500, per:null, pbr:9.64 },
-    { date:"2026-09-03", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:3134252, price:702000, per:13.02, pbr:1.24 },
-    { date:"2026-09-02", name:"현대건설", code:"000720", market:"KOSPI", inIndex:true, sector:"건설", marketCap:1330701, price:119500, per:34.41, pbr:1.55 },
-    { date:"2026-09-03", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:1788601, price:118300, per:20.36, pbr:0.52 },
-    { date:"2026-09-02", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:279233, price:129500, per:37.63, pbr:6.81 },
-    { date:"2026-09-03", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:1665099, price:147900, per:70.05, pbr:1.39 },
-    { date:"2026-09-02", name:"비에이치", code:"090460", market:"KOSPI", inIndex:false, sector:"전자부품(FPCB)", marketCap:66512, price:19730, per:21.44, pbr:0.92 },
-    { date:"2026-09-03", name:"롯데웰푸드", code:"280360", market:"KOSPI", inIndex:true, sector:"식품", marketCap:134939, price:146600, per:11.66, pbr:0.38 },
-    { date:"2026-09-02", name:"진도", code:"088790", market:"KOSPI", inIndex:false, sector:"패션(모피)", marketCap:3006, price:2415, per:7.17, pbr:0.26 },
-    { date:"2026-09-03", name:"하나금융지주", code:"086790", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:3827430, price:139500, per:8.21, pbr:0.7 },
-    { date:"2026-09-02", name:"시선AI", code:"340810", market:"KOSDAQ", inIndex:false, sector:"AI소프트웨어", marketCap:5335, price:3825, per:null, pbr:2.2 },
-    { date:"2026-09-03", name:"한국가스공사", code:"036460", market:"KOSPI", inIndex:true, sector:"에너지공기업", marketCap:348020, price:37700, per:21.84, pbr:0.26 },
-    { date:"2026-09-02", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:413146, price:50200, per:59.93, pbr:14.17 },
-    { date:"2026-09-03", name:"삼화콘덴서", code:"001820", market:"KOSPI", inIndex:false, sector:"전자부품(콘덴서)", marketCap:109147, price:105000, per:123.67, pbr:5.66 },
-    { date:"2026-09-02", name:"한미사이언스", code:"008930", market:"KOSPI", inIndex:true, sector:"지주회사(제약)", marketCap:352216, price:51500, per:17.25, pbr:2.12 },
-    { date:"2026-09-03", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800, per:null, pbr:0.74 },
-    { date:"2026-09-03", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:6309894, price:177900, per:10.32, pbr:0.97 },
-    { date:"2026-09-03", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:1073363, price:29150, per:12.92, pbr:0.93 },
-    { date:"2026-09-03", name:"삼천리", code:"004690", market:"KOSPI", inIndex:false, sector:"도시가스", marketCap:49505, price:136500, per:3.5, pbr:0.23 },
-    { date:"2026-09-03", name:"DL", code:"000210", market:"KOSPI", inIndex:true, sector:"지주회사(건설)", marketCap:115257, price:55000, per:null, pbr:0.24 },
-    { date:"2026-09-03", name:"JB금융지주", code:"175330", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:589408, price:31600, per:6.85, pbr:0.78 },
-    { date:"2026-09-03", name:"한국가스공사", code:"036460", market:"KOSPI", inIndex:true, sector:"에너지공기업", marketCap:348020, price:37700, per:21.84, pbr:0.26 },
-    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100, per:10.03, pbr:0.46 },
-    { date:"2026-09-03", name:"우리금융지주", code:"316140", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:2552965, price:34650, per:7.16, pbr:0.59 },
-    { date:"2026-09-03", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:1665099, price:147900, per:70.05, pbr:1.39 },
-    { date:"2026-09-03", name:"DL", code:"000210", market:"KOSPI", inIndex:true, sector:"지주회사(건설)", marketCap:115257, price:55000, per:null, pbr:0.24 },
-    { date:"2026-09-03", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:3134252, price:702000, per:13.02, pbr:1.24 },
-    { date:"2026-09-03", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:2211210, price:130800, per:null, pbr:0.74 },
-    { date:"2026-09-03", name:"포스코엠텍", code:"009520", market:"KOSDAQ", inIndex:true, sector:"철강", marketCap:52053, price:12500, per:373.82, pbr:4.63 },
-    { date:"2026-09-03", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:413146, price:50200, per:59.93, pbr:14.17 },
-    { date:"2026-09-03", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:3134252, price:702000, per:13.02, pbr:1.24 },
-    { date:"2026-09-03", name:"디아이", code:"003160", market:"KOSPI", inIndex:false, sector:"반도체장비", marketCap:86173, price:30450, per:131.12, pbr:4.09 },
-    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100, per:10.03, pbr:0.46 },
-    { date:"2026-09-03", name:"우리금융지주", code:"316140", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:2552965, price:34650, per:7.16, pbr:0.59 },
-    { date:"2026-09-03", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:73631, price:11180, per:null, pbr:2.13 },
-    { date:"2026-09-03", name:"iM금융지주", code:"139130", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:301682, price:19050, per:6.69, pbr:0.43 },
-    { date:"2026-09-03", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:6309894, price:177900, per:10.32, pbr:0.97 },
-    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:334843, price:133100, per:10.03, pbr:0.46 },
-    { date:"2026-09-03", name:"미원에스씨", code:"268280", market:"KOSPI", inIndex:true, sector:"화학", marketCap:66200, price:132400, per:8.34, pbr:1.14 },
-    { date:"2026-09-03", name:"한국가스공사", code:"036460", market:"KOSPI", inIndex:true, sector:"에너지공기업", marketCap:348020, price:37700, per:21.84, pbr:0.26 },
-    { date:"2026-09-03", name:"한일시멘트", code:"300720", market:"KOSPI", inIndex:true, sector:"시멘트", marketCap:123408, price:16780, per:12.83, pbr:0.54 },
-    { date:"2026-09-03", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:4343560, price:539000, per:null, pbr:1.79 },
-    { date:"2026-09-03", name:"한일시멘트", code:"300720", market:"KOSPI", inIndex:true, sector:"시멘트", marketCap:123408, price:16780, per:12.83, pbr:0.54 },
-    { date:"2026-09-03", name:"원익", code:"032940", market:"KOSDAQ", inIndex:false, sector:"반도체/전자부품 유통 등 복합사업", marketCap:15609, price:8580, per:9.75, pbr:0.39 },
-    { date:"2026-09-03", name:"팬오션", code:"028670", market:"KOSPI", inIndex:true, sector:"해운", marketCap:317534, price:5940, per:8.4, pbr:0.44 },
-    { date:"2026-09-03", name:"아이스크림에듀", code:"289010", market:"KOSDAQ", inIndex:false, sector:"교육콘텐츠", marketCap:1334, price:957, per:null, pbr:0.3 },
-    { date:"2026-09-03", name:"KCC", code:"002380", market:"KOSPI", inIndex:true, sector:"건축자재/화학", marketCap:416755, price:485000, per:2.33, pbr:0.46 },
-    { date:"2026-09-03", name:"HT로보틱스(구 세아메카닉스)", code:"396300", market:"KOSDAQ", inIndex:false, sector:"자동차/로봇부품(다이캐스팅)", marketCap:14966, price:5650, per:64.72, pbr:1.25 },
-    { date:"2026-09-03", name:"자이에스앤디", code:"317400", market:"KOSPI", inIndex:false, sector:"부동산관리(GS건설계열)", marketCap:4359, price:11240, per:4.76, pbr:0.36 },
-    { date:"2026-09-03", name:"삼아알미늄", code:"006110", market:"KOSPI", inIndex:false, sector:"비철금속", marketCap:104654, price:69200, per:null, pbr:2.82 },
-    { date:"2026-09-03", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:4343560, price:539000, per:null, pbr:1.79 },
-    { date:"2026-09-03", name:"엘앤에프", code:"066970", market:"KOSPI", inIndex:true, sector:"2차전지소재", marketCap:491877, price:120900, per:null, pbr:6.38 },
-    { date:"2026-09-03", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:620863, price:208500, per:135.21, pbr:14.37 },
-    { date:"2026-09-03", name:"DL", code:"000210", market:"KOSPI", inIndex:true, sector:"지주회사(건설)", marketCap:115257, price:55000, per:null, pbr:0.24 },
-    { date:"2026-09-03", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:1665099, price:147900, per:70.05, pbr:1.39 }
+    { date:"2026-09-02", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:178860, price:118300, per:25.33, pbr:0.65, div:2.56, seg:"" },
+    { date:"2026-09-03", name:"삼아알미늄", code:"006110", market:"KOSPI", inIndex:false, sector:"비철금속", marketCap:10465, price:69200, per:null, pbr:4.64, div:0.04, seg:"" },
+    { date:"2026-09-04", name:"이오테크닉스", code:"039030", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:51496, price:418000, per:94.48, pbr:7.93, div:0.27, seg:"우량기업부" },
+    { date:"2026-09-02", name:"우리금융지주", code:"316140", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:255297, price:34650, per:8.19, pbr:0.68, div:4.1, seg:"" },
+    { date:"2026-09-03", name:"DB손해보험", code:"005830", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:132966, price:203000, per:6.61, pbr:1.09, div:3.88, seg:"" },
+    { date:"2026-09-04", name:"한진칼", code:"180640", market:"KOSPI", inIndex:true, sector:"지주회사(항공)", marketCap:89328, price:133800, per:63.12, pbr:2.94, div:0.25, seg:"" },
+    { date:"2026-09-02", name:"아모레퍼시픽", code:"090430", market:"KOSPI", inIndex:true, sector:"화장품", marketCap:83352, price:142500, per:41.95, pbr:1.81, div:0.87, seg:"" },
+    { date:"2026-09-03", name:"태웅", code:"044490", market:"KOSDAQ", inIndex:false, sector:"단조(풍력/조선기자재)", marketCap:6903, price:34500, per:119.56, pbr:1.06, div:0.0, seg:"우량기업부" },
+    { date:"2026-09-04", name:"피노", code:"033790", market:"KOSDAQ", inIndex:false, sector:"2차전지소재", marketCap:7357, price:8830, per:null, pbr:7.05, div:0.0, seg:"중견기업부" },
+    { date:"2026-09-02", name:"더블유시피(WCP)", code:"393890", market:"KOSDAQ", inIndex:false, sector:"2차전지분리막", marketCap:3418, price:10100, per:null, pbr:0.38, div:0.0, seg:"기술성장기업부" },
+    { date:"2026-09-03", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:27923, price:129500, per:33.87, pbr:6.13, div:0.75, seg:"우량기업부" },
+    { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:27923, price:129500, per:33.87, pbr:6.13, div:0.75, seg:"우량기업부" },
+    { date:"2026-09-02", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:221121, price:130800, per:null, pbr:1.08, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"산일전기", code:"062040", market:"KOSPI", inIndex:true, sector:"전력기기(변압기)", marketCap:57149, price:186500, per:39.11, pbr:9.95, div:0.65, seg:"" },
+    { date:"2026-09-04", name:"인바디", code:"041830", market:"KOSDAQ", inIndex:false, sector:"의료기기", marketCap:8035, price:59600, per:25.22, pbr:2.56, div:0.98, seg:"우량기업부" },
+    { date:"2026-09-02", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:537521, price:114500, per:11.24, pbr:0.91, div:2.35, seg:"" },
+    { date:"2026-09-03", name:"비에이치", code:"090460", market:"KOSPI", inIndex:false, sector:"전자부품(FPCB)", marketCap:6651, price:19730, per:22.05, pbr:0.95, div:1.14, seg:"" },
+    { date:"2026-09-04", name:"한미반도체", code:"042700", market:"KOSPI", inIndex:true, sector:"반도체장비", marketCap:200632, price:210500, per:101.95, pbr:31.6, div:0.35, seg:"" },
+    { date:"2026-09-02", name:"세방전지", code:"004490", market:"KOSPI", inIndex:false, sector:"2차전지(납축전지)", marketCap:9217, price:66500, per:6.05, pbr:0.53, div:4.11, seg:"" },
+    { date:"2026-09-03", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:434356, price:539000, per:null, pbr:2.01, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"한미사이언스", code:"008930", market:"KOSPI", inIndex:true, sector:"지주회사(제약)", marketCap:35222, price:51500, per:30.21, pbr:3.72, div:0.57, seg:"" },
+    { date:"2026-09-02", name:"JB금융지주", code:"175330", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:58941, price:31600, per:8.57, pbr:0.98, div:3.68, seg:"" },
+    { date:"2026-09-03", name:"삼천리", code:"004690", market:"KOSPI", inIndex:false, sector:"도시가스", marketCap:4951, price:136500, per:4.2, pbr:0.28, div:2.19, seg:"" },
+    { date:"2026-09-04", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:62086, price:208500, per:122.76, pbr:13.05, div:0.05, seg:"" },
+    { date:"2026-09-02", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:7363, price:11180, per:null, pbr:2.86, div:0.0, seg:"중견기업부" },
+    { date:"2026-09-03", name:"LG화학", code:"051910", market:"KOSPI", inIndex:true, sector:"화학", marketCap:202600, price:287000, per:null, pbr:0.67, div:0.71, seg:"" },
+    { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:27923, price:129500, per:33.87, pbr:6.13, div:0.75, seg:"우량기업부" },
+    { date:"2026-09-02", name:"DB손해보험", code:"005830", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:132966, price:203000, per:6.61, pbr:1.09, div:3.88, seg:"" },
+    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:33484, price:133100, per:11.14, pbr:0.52, div:1.35, seg:"" },
+    { date:"2026-09-04", name:"동원산업", code:"006040", market:"KOSPI", inIndex:true, sector:"수산·식품", marketCap:16707, price:37850, per:4.33, pbr:0.48, div:3.02, seg:"" },
+    { date:"2026-09-02", name:"롯데웰푸드", code:"280360", market:"KOSPI", inIndex:true, sector:"식품", marketCap:13494, price:146600, per:17.8, pbr:0.59, div:2.27, seg:"" },
+    { date:"2026-09-03", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:630989, price:177900, per:11.16, pbr:1.04, div:2.54, seg:"" },
+    { date:"2026-09-04", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:62086, price:208500, per:122.76, pbr:13.05, div:0.05, seg:"" },
+    { date:"2026-09-02", name:"메리츠금융지주", code:"138040", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:229098, price:136900, per:10.5, pbr:2.21, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"효성티앤씨", code:"298020", market:"KOSPI", inIndex:true, sector:"화학섬유", marketCap:15342, price:354500, per:137.86, pbr:0.95, div:2.91, seg:"" },
+    { date:"2026-09-04", name:"로보티즈", code:"108490", market:"KOSDAQ", inIndex:true, sector:"로봇", marketCap:36448, price:248500, per:790.91, pbr:14.03, div:0.0, seg:"기술성장기업부" },
+    { date:"2026-09-02", name:"현대해상", code:"001450", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:45608, price:53500, per:3.93, pbr:0.78, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:166510, price:147900, per:103.55, pbr:2.06, div:0.21, seg:"" },
+    { date:"2026-09-04", name:"디아이", code:"003160", market:"KOSPI", inIndex:false, sector:"반도체장비", marketCap:8617, price:30450, per:159.44, pbr:4.97, div:0.8, seg:"" },
+    { date:"2026-09-04", name:"주성엔지니어링", code:"036930", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:78088, price:168000, per:228.3, pbr:13.8, div:0.03, seg:"우량기업부" },
+    { date:"2026-09-04", name:"현대해상", code:"001450", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:45608, price:53500, per:3.93, pbr:0.78, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"한국가스공사", code:"036460", market:"KOSPI", inIndex:true, sector:"에너지공기업", marketCap:34802, price:37700, per:23.99, pbr:0.28, div:3.29, seg:"" },
+    { date:"2026-09-04", name:"LG전자", code:"066570", market:"KOSPI", inIndex:true, sector:"전자", marketCap:325281, price:199700, per:37.8, pbr:1.52, div:0.67, seg:"" },
+    { date:"2026-09-02", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:630989, price:177900, per:11.16, pbr:1.04, div:2.54, seg:"" },
+    { date:"2026-09-03", name:"동원산업", code:"006040", market:"KOSPI", inIndex:true, sector:"수산·식품", marketCap:16707, price:37850, per:4.33, pbr:0.48, div:3.02, seg:"" },
+    { date:"2026-09-04", name:"ISC", code:"095340", market:"KOSDAQ", inIndex:true, sector:"반도체부품(소켓)", marketCap:36395, price:171700, per:66.35, pbr:6.94, div:0.47, seg:"우량기업부" },
+    { date:"2026-09-02", name:"효성티앤씨", code:"298020", market:"KOSPI", inIndex:true, sector:"화학섬유", marketCap:15342, price:354500, per:137.86, pbr:0.95, div:2.91, seg:"" },
+    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:33484, price:133100, per:11.14, pbr:0.52, div:1.35, seg:"" },
+    { date:"2026-09-04", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:221121, price:130800, per:null, pbr:1.08, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"두산에너빌리티", code:"034020", market:"KOSPI", inIndex:true, sector:"발전설비", marketCap:507324, price:79200, per:600.0, pbr:6.52, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:313425, price:702000, per:13.96, pbr:1.33, div:2.94, seg:"" },
+    { date:"2026-09-04", name:"SK", code:"034730", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:395140, price:545000, per:19.76, pbr:1.25, div:1.4, seg:"" },
+    { date:"2026-09-04", name:"한미반도체", code:"042700", market:"KOSPI", inIndex:true, sector:"반도체장비", marketCap:200632, price:210500, per:101.95, pbr:31.6, div:0.35, seg:"" },
+    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:174874, price:226000, per:24.24, pbr:1.86, div:1.34, seg:"" },
+    { date:"2026-09-04", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:62086, price:208500, per:122.76, pbr:13.05, div:0.05, seg:"" },
+    { date:"2026-09-04", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:33484, price:133100, per:11.14, pbr:0.52, div:1.35, seg:"" },
+    { date:"2026-09-04", name:"테스", code:"095610", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:25923, price:133900, per:45.25, pbr:6.65, div:0.58, seg:"우량기업부" },
+    { date:"2026-09-04", name:"헥토파이낸셜", code:"234340", market:"KOSDAQ", inIndex:false, sector:"전자결제(핀테크)", marketCap:3108, price:22250, per:36.02, pbr:2.0, div:0.87, seg:"우량기업부" },
+    { date:"2026-09-04", name:"로보티즈", code:"108490", market:"KOSDAQ", inIndex:true, sector:"로봇", marketCap:36448, price:248500, per:790.91, pbr:14.03, div:0.0, seg:"기술성장기업부" },
+    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:174874, price:226000, per:24.24, pbr:1.86, div:1.34, seg:"" },
+    { date:"2026-09-04", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:221121, price:130800, per:null, pbr:1.08, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:178860, price:118300, per:25.33, pbr:0.65, div:2.56, seg:"" },
+    { date:"2026-09-04", name:"LG에너지솔루션", code:"373220", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:855270, price:365500, per:null, pbr:4.15, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:41315, price:50200, per:56.38, pbr:13.33, div:0.98, seg:"우량기업부" },
+    { date:"2026-09-04", name:"DB손해보험", code:"005830", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:132966, price:203000, per:6.61, pbr:1.09, div:3.88, seg:"" },
+    { date:"2026-09-04", name:"SK케미칼", code:"285130", market:"KOSPI", inIndex:true, sector:"화학", marketCap:9497, price:54900, per:23.94, pbr:0.47, div:2.08, seg:"" },
+    { date:"2026-09-04", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:166510, price:147900, per:103.55, pbr:2.06, div:0.21, seg:"" },
+    { date:"2026-09-04", name:"주성엔지니어링", code:"036930", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:78088, price:168000, per:228.3, pbr:13.8, div:0.03, seg:"우량기업부" },
+    { date:"2026-09-04", name:"삼화콘덴서", code:"001820", market:"KOSPI", inIndex:false, sector:"전자부품(콘덴서)", marketCap:10915, price:105000, per:89.93, pbr:4.11, div:0.46, seg:"" },
+    { date:"2026-09-04", name:"LX하우시스", code:"108670", market:"KOSPI", inIndex:false, sector:"건축자재", marketCap:3139, price:35000, per:null, pbr:0.43, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"HD현대", code:"267250", market:"KOSPI", inIndex:true, sector:"조선·중공업지주", marketCap:168650, price:213500, per:17.65, pbr:1.68, div:1.66, seg:"" },
+    { date:"2026-09-04", name:"한진칼", code:"180640", market:"KOSPI", inIndex:true, sector:"지주회사(항공)", marketCap:89328, price:133800, per:63.12, pbr:2.94, div:0.25, seg:"" },
+    { date:"2026-09-04", name:"티씨케이", code:"064760", market:"KOSDAQ", inIndex:true, sector:"반도체소재", marketCap:26886, price:240500, per:41.06, pbr:5.42, div:0.57, seg:"우량기업부" },
+    { date:"2026-09-04", name:"제이에스링크", code:"127120", market:"KOSDAQ", inIndex:false, sector:"바이오·유전체분석", marketCap:10954, price:29900, per:null, pbr:15.65, div:0.0, seg:"벤처기업부" },
+    { date:"2026-09-04", name:"팬오션", code:"028670", market:"KOSPI", inIndex:true, sector:"해운", marketCap:31753, price:5940, per:10.57, pbr:0.56, div:2.52, seg:"" },
+    { date:"2026-09-04", name:"HD현대", code:"267250", market:"KOSPI", inIndex:true, sector:"조선·중공업지주", marketCap:168650, price:213500, per:17.65, pbr:1.68, div:1.66, seg:"" },
+    { date:"2026-09-04", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:166510, price:147900, per:103.55, pbr:2.06, div:0.21, seg:"" },
+    { date:"2026-09-04", name:"로보티즈", code:"108490", market:"KOSDAQ", inIndex:true, sector:"로봇", marketCap:36448, price:248500, per:790.91, pbr:14.03, div:0.0, seg:"기술성장기업부" },
+    { date:"2026-09-04", name:"SK가스", code:"018670", market:"KOSPI", inIndex:false, sector:"LPG에너지", marketCap:21690, price:234000, per:9.11, pbr:0.73, div:3.77, seg:"" },
+    { date:"2026-09-04", name:"주성엔지니어링", code:"036930", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:78088, price:168000, per:228.3, pbr:13.8, div:0.03, seg:"우량기업부" },
+    { date:"2026-09-04", name:"티씨케이", code:"064760", market:"KOSDAQ", inIndex:true, sector:"반도체소재", marketCap:26886, price:240500, per:41.06, pbr:5.42, div:0.57, seg:"우량기업부" },
+    { date:"2026-09-04", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:107336, price:29150, per:14.16, pbr:1.02, div:2.48, seg:"" },
+    { date:"2026-09-04", name:"삼성에스디에스", code:"018260", market:"KOSPI", inIndex:true, sector:"IT서비스", marketCap:174874, price:226000, per:24.24, pbr:1.86, div:1.34, seg:"" },
+    { date:"2026-09-02", name:"메리츠금융지주", code:"138040", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:229098, price:136900, per:10.5, pbr:2.21, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"까뮤이앤씨", code:"013700", market:"KOSPI", inIndex:false, sector:"건설", marketCap:991, price:1658, per:5.0, pbr:0.89, div:1.79, seg:"" },
+    { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:27923, price:129500, per:33.87, pbr:6.13, div:0.75, seg:"우량기업부" },
+    { date:"2026-09-02", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:107336, price:29150, per:14.16, pbr:1.02, div:2.48, seg:"" },
+    { date:"2026-09-03", name:"엘앤에프", code:"066970", market:"KOSPI", inIndex:true, sector:"2차전지소재", marketCap:49188, price:120900, per:null, pbr:6.94, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:7363, price:11180, per:null, pbr:2.86, div:0.0, seg:"중견기업부" },
+    { date:"2026-09-02", name:"오뚜기", code:"007310", market:"KOSPI", inIndex:true, sector:"식품", marketCap:13466, price:336000, per:16.47, pbr:0.55, div:2.69, seg:"" },
+    { date:"2026-09-03", name:"코스맥스", code:"192820", market:"KOSPI", inIndex:true, sector:"화장품ODM", marketCap:32006, price:282000, per:25.4, pbr:5.6, div:1.2, seg:"" },
+    { date:"2026-09-04", name:"비에이치", code:"090460", market:"KOSPI", inIndex:false, sector:"전자부품(FPCB)", marketCap:6651, price:19730, per:22.05, pbr:0.95, div:1.14, seg:"" },
+    { date:"2026-09-02", name:"BGF리테일", code:"282330", market:"KOSPI", inIndex:true, sector:"편의점유통", marketCap:26030, price:150600, per:13.06, pbr:1.94, div:2.78, seg:"" },
+    { date:"2026-09-03", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:178860, price:118300, per:25.33, pbr:0.65, div:2.56, seg:"" },
+    { date:"2026-09-04", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:27923, price:129500, per:33.87, pbr:6.13, div:0.75, seg:"우량기업부" },
+    { date:"2026-09-02", name:"디아이", code:"003160", market:"KOSPI", inIndex:false, sector:"반도체장비", marketCap:8617, price:30450, per:159.44, pbr:4.97, div:0.8, seg:"" },
+    { date:"2026-09-03", name:"코스맥스", code:"192820", market:"KOSPI", inIndex:true, sector:"화장품ODM", marketCap:32006, price:282000, per:25.4, pbr:5.6, div:1.2, seg:"" },
+    { date:"2026-09-04", name:"LX하우시스", code:"108670", market:"KOSPI", inIndex:false, sector:"건축자재", marketCap:3139, price:35000, per:null, pbr:0.43, div:0.0, seg:"" },
+    { date:"2026-09-02", name:"한화생명", code:"088350", market:"KOSPI", inIndex:true, sector:"생명보험", marketCap:53067, price:6110, per:8.28, pbr:0.31, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:630989, price:177900, per:11.16, pbr:1.04, div:2.54, seg:"" },
+    { date:"2026-09-04", name:"한솔테크닉스", code:"004710", market:"KOSPI", inIndex:false, sector:"전자부품", marketCap:4510, price:8490, per:null, pbr:0.93, div:1.18, seg:"" },
+    { date:"2026-09-02", name:"HT로보틱스(구 세아메카닉스)", code:"396300", market:"KOSDAQ", inIndex:false, sector:"자동차/로봇부품(다이캐스팅)", marketCap:1497, price:5650, per:105.0, pbr:2.02, div:0.0, seg:"우량기업부" },
+    { date:"2026-09-03", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:434356, price:539000, per:null, pbr:2.01, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"포스코홀딩스", code:"005490", market:"KOSPI", inIndex:true, sector:"철강", marketCap:271006, price:342000, per:38.75, pbr:0.46, div:2.97, seg:"" },
+    { date:"2026-09-02", name:"아스플로", code:"159010", market:"KOSDAQ", inIndex:false, sector:"반도체소재(초고순도배관)", marketCap:3327, price:24950, per:null, pbr:7.08, div:0.0, seg:"벤처기업부" },
+    { date:"2026-09-03", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:107336, price:29150, per:14.16, pbr:1.02, div:2.48, seg:"" },
+    { date:"2026-09-04", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:178860, price:118300, per:25.33, pbr:0.65, div:2.56, seg:"" },
+    { date:"2026-09-02", name:"디아이", code:"003160", market:"KOSPI", inIndex:false, sector:"반도체장비", marketCap:8617, price:30450, per:159.44, pbr:4.97, div:0.8, seg:"" },
+    { date:"2026-09-03", name:"LG생활건강", code:"051900", market:"KOSPI", inIndex:true, sector:"화장품/생활용품", marketCap:43654, price:291500, per:null, pbr:0.9, div:0.68, seg:"" },
+    { date:"2026-09-04", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:537521, price:114500, per:11.24, pbr:0.91, div:2.35, seg:"" },
+    { date:"2026-09-02", name:"삼화콘덴서", code:"001820", market:"KOSPI", inIndex:false, sector:"전자부품(콘덴서)", marketCap:10915, price:105000, per:89.93, pbr:4.11, div:0.46, seg:"" },
+    { date:"2026-09-03", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:107336, price:29150, per:14.16, pbr:1.02, div:2.48, seg:"" },
+    { date:"2026-09-04", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:7363, price:11180, per:null, pbr:2.86, div:0.0, seg:"중견기업부" },
+    { date:"2026-09-02", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:41315, price:50200, per:56.38, pbr:13.33, div:0.98, seg:"우량기업부" },
+    { date:"2026-09-03", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:178860, price:118300, per:25.33, pbr:0.65, div:2.56, seg:"" },
+    { date:"2026-09-04", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:107336, price:29150, per:14.16, pbr:1.02, div:2.48, seg:"" },
+    { date:"2026-09-02", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:630989, price:177900, per:11.16, pbr:1.04, div:2.54, seg:"" },
+    { date:"2026-09-03", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:537521, price:114500, per:11.24, pbr:0.91, div:2.35, seg:"" },
+    { date:"2026-09-04", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:221121, price:130800, per:null, pbr:1.08, div:0.0, seg:"" },
+    { date:"2026-09-02", name:"유진테크", code:"084370", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:29974, price:130800, per:71.62, pbr:6.72, div:0.17, seg:"우량기업부" },
+    { date:"2026-09-03", name:"도우인시스", code:"484120", market:"KOSDAQ", inIndex:false, sector:"디스플레이장비및부품", marketCap:2296, price:20950, per:438.78, pbr:1.39, div:0.0, seg:"중견기업부" },
+    { date:"2026-09-04", name:"현대엘리베이터", code:"017800", market:"KOSPI", inIndex:true, sector:"승강기", marketCap:29202, price:74700, per:10.32, pbr:2.0, div:18.7, seg:"" },
+    { date:"2026-09-02", name:"아스플로", code:"159010", market:"KOSDAQ", inIndex:false, sector:"반도체소재(초고순도배관)", marketCap:3327, price:24950, per:null, pbr:7.08, div:0.0, seg:"벤처기업부" },
+    { date:"2026-09-03", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:27923, price:129500, per:33.87, pbr:6.13, div:0.75, seg:"우량기업부" },
+    { date:"2026-09-04", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:630989, price:177900, per:11.16, pbr:1.04, div:2.54, seg:"" },
+    { date:"2026-09-02", name:"iM금융지주", code:"139130", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:30168, price:19050, per:7.22, pbr:0.47, div:3.86, seg:"" },
+    { date:"2026-09-03", name:"우리금융지주", code:"316140", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:255297, price:34650, per:8.19, pbr:0.68, div:4.1, seg:"" },
+    { date:"2026-09-04", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:166510, price:147900, per:103.55, pbr:2.06, div:0.21, seg:"" },
+    { date:"2026-09-02", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:434356, price:539000, per:null, pbr:2.01, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"녹십자웰빙", code:"234690", market:"KOSDAQ", inIndex:false, sector:"건강기능식품", marketCap:1931, price:10750, per:18.33, pbr:1.63, div:1.35, seg:"우량기업부" },
+    { date:"2026-09-04", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:7363, price:11180, per:null, pbr:2.86, div:0.0, seg:"중견기업부" },
+    { date:"2026-09-02", name:"롯데웰푸드", code:"280360", market:"KOSPI", inIndex:true, sector:"식품", marketCap:13494, price:146600, per:17.8, pbr:0.59, div:2.27, seg:"" },
+    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:33484, price:133100, per:11.14, pbr:0.52, div:1.35, seg:"" },
+    { date:"2026-09-04", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:537521, price:114500, per:11.24, pbr:0.91, div:2.35, seg:"" },
+    { date:"2026-09-02", name:"산일전기", code:"062040", market:"KOSPI", inIndex:true, sector:"전력기기(변압기)", marketCap:57149, price:186500, per:39.11, pbr:9.95, div:0.65, seg:"" },
+    { date:"2026-09-03", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:62086, price:208500, per:122.76, pbr:13.05, div:0.05, seg:"" },
+    { date:"2026-09-04", name:"테스", code:"095610", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:25923, price:133900, per:45.25, pbr:6.65, div:0.58, seg:"우량기업부" },
+    { date:"2026-09-02", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:221121, price:130800, per:null, pbr:1.08, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"LG에너지솔루션", code:"373220", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:855270, price:365500, per:null, pbr:4.15, div:0.0, seg:"" },
+    { date:"2026-09-04", name:"이수페타시스", code:"007660", market:"KOSPI", inIndex:true, sector:"PCB(인쇄회로기판)", marketCap:77814, price:106000, per:48.77, pbr:10.79, div:0.21, seg:"" },
+    { date:"2026-09-02", name:"빙그레", code:"005180", market:"KOSPI", inIndex:false, sector:"식품", marketCap:8528, price:92000, per:14.37, pbr:1.07, div:3.65, seg:"" },
+    { date:"2026-09-03", name:"신한지주", code:"055550", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:537521, price:114500, per:11.24, pbr:0.91, div:2.35, seg:"" },
+    { date:"2026-09-02", name:"JB금융지주", code:"175330", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:58941, price:31600, per:8.57, pbr:0.98, div:3.68, seg:"" },
+    { date:"2026-09-03", name:"아시아나항공", code:"020560", market:"KOSPI", inIndex:false, sector:"항공", marketCap:16026, price:7780, per:null, pbr:2.23, div:0.0, seg:"" },
+    { date:"2026-09-02", name:"솔트웨어", code:"328380", market:"KOSDAQ", inIndex:false, sector:"IT서비스", marketCap:269, price:3930, per:31.56, pbr:1.14, div:0.0, seg:"벤처기업부" },
+    { date:"2026-09-03", name:"한화생명", code:"088350", market:"KOSPI", inIndex:true, sector:"생명보험", marketCap:53067, price:6110, per:8.28, pbr:0.31, div:0.0, seg:"" },
+    { date:"2026-09-02", name:"이수페타시스", code:"007660", market:"KOSPI", inIndex:true, sector:"PCB(인쇄회로기판)", marketCap:77814, price:106000, per:48.77, pbr:10.79, div:0.21, seg:"" },
+    { date:"2026-09-03", name:"동국제약", code:"086450", market:"KOSDAQ", inIndex:false, sector:"제약", marketCap:9860, price:21800, per:14.53, pbr:1.47, div:0.93, seg:"우량기업부" },
+    { date:"2026-09-02", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:41315, price:50200, per:56.38, pbr:13.33, div:0.98, seg:"우량기업부" },
+    { date:"2026-09-03", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:166510, price:147900, per:103.55, pbr:2.06, div:0.21, seg:"" },
+    { date:"2026-09-02", name:"심텍", code:"222800", market:"KOSDAQ", inIndex:true, sector:"PCB(반도체기판)", marketCap:44620, price:117500, per:null, pbr:7.65, div:0.08, seg:"중견기업부" },
+    { date:"2026-09-03", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:313425, price:702000, per:13.96, pbr:1.33, div:2.94, seg:"" },
+    { date:"2026-09-02", name:"현대건설", code:"000720", market:"KOSPI", inIndex:true, sector:"건설", marketCap:133070, price:119500, per:36.07, pbr:1.63, div:0.67, seg:"" },
+    { date:"2026-09-03", name:"LG", code:"003550", market:"KOSPI", inIndex:true, sector:"지주회사", marketCap:178860, price:118300, per:25.33, pbr:0.65, div:2.56, seg:"" },
+    { date:"2026-09-02", name:"피에스케이홀딩스", code:"031980", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:27923, price:129500, per:33.87, pbr:6.13, div:0.75, seg:"우량기업부" },
+    { date:"2026-09-03", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:166510, price:147900, per:103.55, pbr:2.06, div:0.21, seg:"" },
+    { date:"2026-09-02", name:"비에이치", code:"090460", market:"KOSPI", inIndex:false, sector:"전자부품(FPCB)", marketCap:6651, price:19730, per:22.05, pbr:0.95, div:1.14, seg:"" },
+    { date:"2026-09-03", name:"롯데웰푸드", code:"280360", market:"KOSPI", inIndex:true, sector:"식품", marketCap:13494, price:146600, per:17.8, pbr:0.59, div:2.27, seg:"" },
+    { date:"2026-09-02", name:"진도", code:"088790", market:"KOSPI", inIndex:false, sector:"패션(모피)", marketCap:301, price:2415, per:7.09, pbr:0.26, div:6.41, seg:"" },
+    { date:"2026-09-03", name:"하나금융지주", code:"086790", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:382743, price:139500, per:9.62, pbr:0.82, div:3.06, seg:"" },
+    { date:"2026-09-02", name:"시선AI", code:"340810", market:"KOSDAQ", inIndex:false, sector:"AI소프트웨어", marketCap:534, price:3825, per:null, pbr:3.46, div:0.0, seg:"기술성장기업부" },
+    { date:"2026-09-03", name:"한국가스공사", code:"036460", market:"KOSPI", inIndex:true, sector:"에너지공기업", marketCap:34802, price:37700, per:23.99, pbr:0.28, div:3.29, seg:"" },
+    { date:"2026-09-02", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:41315, price:50200, per:56.38, pbr:13.33, div:0.98, seg:"우량기업부" },
+    { date:"2026-09-03", name:"삼화콘덴서", code:"001820", market:"KOSPI", inIndex:false, sector:"전자부품(콘덴서)", marketCap:10915, price:105000, per:89.93, pbr:4.11, div:0.46, seg:"" },
+    { date:"2026-09-02", name:"한미사이언스", code:"008930", market:"KOSPI", inIndex:true, sector:"지주회사(제약)", marketCap:35222, price:51500, per:30.21, pbr:3.72, div:0.57, seg:"" },
+    { date:"2026-09-03", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:221121, price:130800, per:null, pbr:1.08, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:630989, price:177900, per:11.16, pbr:1.04, div:2.54, seg:"" },
+    { date:"2026-09-03", name:"대한항공", code:"003490", market:"KOSPI", inIndex:true, sector:"항공", marketCap:107336, price:29150, per:14.16, pbr:1.02, div:2.48, seg:"" },
+    { date:"2026-09-03", name:"삼천리", code:"004690", market:"KOSPI", inIndex:false, sector:"도시가스", marketCap:4951, price:136500, per:4.2, pbr:0.28, div:2.19, seg:"" },
+    { date:"2026-09-03", name:"DL", code:"000210", market:"KOSPI", inIndex:true, sector:"지주회사(건설)", marketCap:11526, price:55000, per:null, pbr:0.3, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"JB금융지주", code:"175330", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:58941, price:31600, per:8.57, pbr:0.98, div:3.68, seg:"" },
+    { date:"2026-09-03", name:"한국가스공사", code:"036460", market:"KOSPI", inIndex:true, sector:"에너지공기업", marketCap:34802, price:37700, per:23.99, pbr:0.28, div:3.29, seg:"" },
+    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:33484, price:133100, per:11.14, pbr:0.52, div:1.35, seg:"" },
+    { date:"2026-09-03", name:"우리금융지주", code:"316140", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:255297, price:34650, per:8.19, pbr:0.68, div:4.1, seg:"" },
+    { date:"2026-09-03", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:166510, price:147900, per:103.55, pbr:2.06, div:0.21, seg:"" },
+    { date:"2026-09-03", name:"DL", code:"000210", market:"KOSPI", inIndex:true, sector:"지주회사(건설)", marketCap:11526, price:55000, per:null, pbr:0.3, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:313425, price:702000, per:13.96, pbr:1.33, div:2.94, seg:"" },
+    { date:"2026-09-03", name:"SK이노베이션", code:"096770", market:"KOSPI", inIndex:true, sector:"에너지·화학", marketCap:221121, price:130800, per:null, pbr:1.08, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"포스코엠텍", code:"009520", market:"KOSDAQ", inIndex:true, sector:"철강", marketCap:5205, price:12500, per:372.06, pbr:4.61, div:0.08, seg:"중견기업부" },
+    { date:"2026-09-03", name:"HPSP", code:"403870", market:"KOSDAQ", inIndex:true, sector:"반도체장비", marketCap:41315, price:50200, per:56.38, pbr:13.33, div:0.98, seg:"우량기업부" },
+    { date:"2026-09-03", name:"삼성화재", code:"000810", market:"KOSPI", inIndex:true, sector:"손해보험", marketCap:313425, price:702000, per:13.96, pbr:1.33, div:2.94, seg:"" },
+    { date:"2026-09-03", name:"디아이", code:"003160", market:"KOSPI", inIndex:false, sector:"반도체장비", marketCap:8617, price:30450, per:159.44, pbr:4.97, div:0.8, seg:"" },
+    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:33484, price:133100, per:11.14, pbr:0.52, div:1.35, seg:"" },
+    { date:"2026-09-03", name:"우리금융지주", code:"316140", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:255297, price:34650, per:8.19, pbr:0.68, div:4.1, seg:"" },
+    { date:"2026-09-03", name:"넥슨게임즈", code:"225570", market:"KOSDAQ", inIndex:true, sector:"게임", marketCap:7363, price:11180, per:null, pbr:2.86, div:0.0, seg:"중견기업부" },
+    { date:"2026-09-03", name:"iM금융지주", code:"139130", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:30168, price:19050, per:7.22, pbr:0.47, div:3.86, seg:"" },
+    { date:"2026-09-03", name:"KB금융", code:"105560", market:"KOSPI", inIndex:true, sector:"금융지주", marketCap:630989, price:177900, per:11.16, pbr:1.04, div:2.54, seg:"" },
+    { date:"2026-09-03", name:"금호석유화학", code:"011780", market:"KOSPI", inIndex:true, sector:"화학", marketCap:33484, price:133100, per:11.14, pbr:0.52, div:1.35, seg:"" },
+    { date:"2026-09-03", name:"미원에스씨", code:"268280", market:"KOSPI", inIndex:true, sector:"화학", marketCap:6620, price:132400, per:10.32, pbr:1.41, div:2.45, seg:"" },
+    { date:"2026-09-03", name:"한국가스공사", code:"036460", market:"KOSPI", inIndex:true, sector:"에너지공기업", marketCap:34802, price:37700, per:23.99, pbr:0.28, div:3.29, seg:"" },
+    { date:"2026-09-03", name:"한일시멘트", code:"300720", market:"KOSPI", inIndex:true, sector:"시멘트", marketCap:12341, price:16780, per:15.71, pbr:0.66, div:6.0, seg:"" },
+    { date:"2026-09-03", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:434356, price:539000, per:null, pbr:2.01, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"한일시멘트", code:"300720", market:"KOSPI", inIndex:true, sector:"시멘트", marketCap:12341, price:16780, per:15.71, pbr:0.66, div:6.0, seg:"" },
+    { date:"2026-09-03", name:"원익", code:"032940", market:"KOSDAQ", inIndex:false, sector:"반도체/전자부품 유통 등 복합사업", marketCap:1561, price:8580, per:15.9, pbr:0.64, div:0.0, seg:"우량기업부" },
+    { date:"2026-09-03", name:"팬오션", code:"028670", market:"KOSPI", inIndex:true, sector:"해운", marketCap:31753, price:5940, per:10.57, pbr:0.56, div:2.52, seg:"" },
+    { date:"2026-09-03", name:"아이스크림에듀", code:"289010", market:"KOSDAQ", inIndex:false, sector:"교육콘텐츠", marketCap:133, price:957, per:null, pbr:0.32, div:0.0, seg:"관리종목" },
+    { date:"2026-09-03", name:"KCC", code:"002380", market:"KOSPI", inIndex:true, sector:"건축자재/화학", marketCap:41676, price:485000, per:2.3, pbr:0.45, div:3.11, seg:"" },
+    { date:"2026-09-03", name:"HT로보틱스(구 세아메카닉스)", code:"396300", market:"KOSDAQ", inIndex:false, sector:"자동차/로봇부품(다이캐스팅)", marketCap:1497, price:5650, per:105.0, pbr:2.02, div:0.0, seg:"우량기업부" },
+    { date:"2026-09-03", name:"자이에스앤디", code:"317400", market:"KOSPI", inIndex:false, sector:"부동산관리(GS건설계열)", marketCap:4359, price:11240, per:12.55, pbr:0.95, div:1.34, seg:"" },
+    { date:"2026-09-03", name:"삼아알미늄", code:"006110", market:"KOSPI", inIndex:false, sector:"비철금속", marketCap:10465, price:69200, per:null, pbr:4.64, div:0.04, seg:"" },
+    { date:"2026-09-03", name:"삼성SDI", code:"006400", market:"KOSPI", inIndex:true, sector:"2차전지", marketCap:434356, price:539000, per:null, pbr:2.01, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"엘앤에프", code:"066970", market:"KOSPI", inIndex:true, sector:"2차전지소재", marketCap:49188, price:120900, per:null, pbr:6.94, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"가온전선", code:"000500", market:"KOSPI", inIndex:false, sector:"전선", marketCap:62086, price:208500, per:122.76, pbr:13.05, div:0.05, seg:"" },
+    { date:"2026-09-03", name:"DL", code:"000210", market:"KOSPI", inIndex:true, sector:"지주회사(건설)", marketCap:11526, price:55000, per:null, pbr:0.3, div:0.0, seg:"" },
+    { date:"2026-09-03", name:"S-Oil", code:"010950", market:"KOSPI", inIndex:true, sector:"정유", marketCap:166510, price:147900, per:103.55, pbr:2.06, div:0.21, seg:"" }
   ]
 };
 const KRX_HOLIDAYS = new Set([
@@ -393,7 +401,7 @@ function bizDaysStart(endDateStr, n){
   return toDateStr(d);
 }
 
-const UPDATED_AT = "2026-09-04 오전 9:15";
+const UPDATED_AT = "2026-09-05 오후 6:06";
 let latestDate = "";
 let curStart = "", curEnd = "";
 
@@ -424,8 +432,8 @@ function buildPeriodRow(){
 }
 
 function marketLabel(s){
-  if(s.market === 'KOSPI') return s.inIndex ? 'KOSPI200' : 'KOSPI';
-  return s.inIndex ? 'KOSDAQ150' : 'KOSDAQ';
+  if(s.market === 'KOSPI') return s.inIndex ? '코스피200' : '코스피';
+  return s.inIndex ? '코스닥150' : '코스닥';
 }
 function marketTagClass(s){
   if(s.market === 'KOSPI') return s.inIndex ? 'kospi200' : 'kospi';
@@ -483,19 +491,19 @@ function render(){
   document.getElementById('m-market-basis').innerHTML = `<span class="basis-tag">${curRangeLabel} 기준</span>`;
   const marketBox = document.getElementById('m-market');
   marketBox.innerHTML = '';
-  const marketCountsArr = groupDefs.map(g => ranked.filter(g.filter).reduce((s,x)=>s+x.count,0));
+  const marketCountsArr = groupDefs.map(g => ranked.filter(g.filter).length); // 종목수 기준(중복 제거)
   const maxMarketCnt = Math.max(...marketCountsArr, 1); // 시총분포와 동일하게 최대값 기준 비율(%)
   groupDefs.forEach((g, gi) => {
     const stocks = ranked.filter(g.filter);
     const cnt = marketCountsArr[gi];
     const pct = Math.round(cnt/maxMarketCnt*100);
     const wrap = document.createElement('div');
-    wrap.innerHTML = `<div class="dist-line clickable"><span class="tag ${g.cls}">${g.label}</span><span class="cnt">${cnt}건 · ${pct}%</span></div>`;
+    wrap.innerHTML = `<div class="dist-line clickable"><span class="tag ${g.cls}">${g.label}</span><span class="cnt">${cnt}개 · ${pct}%</span></div>`;
     const line = wrap.firstElementChild;
     const sub = document.createElement('div');
     sub.className = 'dist-sublist';
     sub.innerHTML = stocks.length
-      ? stocks.map((s,i)=>`<div class="sub-row" onclick="openNaver('${s.code}')"><span>${i+1}. ${s.name}</span><span class="cnt">${s.count}회</span></div>`).join('')
+      ? stocks.map((s,i)=>`<div class="sub-row" onclick="openNaver('${s.code}')" title="${s.name}${s.seg?' ('+s.seg+')':''}"><span>${i+1}. ${s.name}${s.seg?`<span class=\"seg\">(${s.seg})</span>`:''}</span><span class="cnt">${s.count}회</span></div>`).join('')
       : '<div class="sub-row">해당 종목 없음</div>';
     line.addEventListener('click', () => sub.classList.toggle('show'));
     marketBox.appendChild(line);
@@ -527,7 +535,7 @@ function render(){
     const sub = document.createElement('div');
     sub.className = 'dist-sublist';
     sub.innerHTML = stocks.length
-      ? stocks.map(s=>`<div class="sub-row" onclick="openNaver('${s.code}')"><span class="tag ${marketTagClass(s)}" style="margin-right:6px;">${marketLabel(s)}</span>${s.name}<span class="cnt">${fmtCap(s.marketCap)}</span></div>`).join('')
+      ? stocks.map(s=>`<div class="sub-row" onclick="openNaver('${s.code}')" title="${s.name}${s.seg?' ('+s.seg+')':''}"><span class="tag ${marketTagClass(s)}" style="margin-right:6px; flex-shrink:0;">${marketLabel(s)}</span><span class="name-flex">${s.name}${s.seg?`<span class=\"seg\">(${s.seg})</span>`:''}</span><span class="cnt">${fmtCap(s.marketCap)}</span></div>`).join('')
       : '<div class="sub-row">해당 종목 없음</div>';
     line.addEventListener('click', () => sub.classList.toggle('show'));
     capBox.appendChild(line);
@@ -541,13 +549,15 @@ function render(){
     <div class="rank-card">
       <div class="top-line">
         <span class="rk">${i+1}위</span>
-        <span class="nm" onclick="openNaver('${s.code}')">${s.name}</span>
+        <span class="tag ${marketTagClass(s)}" style="flex-shrink:0;">${marketLabel(s)}</span>
+        <span class="nm" onclick="openNaver('${s.code}')" title="${s.name}${s.seg?' ('+s.seg+')':''}">${s.name}${s.seg ? `<span class="seg">(${s.seg})</span>` : ''}</span>
         <span class="cnt">${s.count}회</span>
       </div>
       <div class="sub-line">
         <span>시총 <b>${fmtCap(s.marketCap)}</b></span>
         <span>PER <b>${s.per != null ? s.per.toFixed(1) : '-'}</b></span>
         <span>PBR <b>${s.pbr != null ? s.pbr.toFixed(1) : '-'}</b></span>
+        <span>배당 <b>${s.div != null ? s.div.toFixed(2)+'%' : '-'}</b></span>
       </div>
     </div>
   `).join('');
